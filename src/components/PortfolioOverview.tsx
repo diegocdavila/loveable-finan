@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
-import { formatCurrency } from '@/utils/calculations';
+import { formatCurrency, annualToMonthlyRate } from '@/utils/calculations';
 import {
   PieChart,
   Pie,
@@ -85,6 +85,15 @@ const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
       ? Math.pow(variableIncomeTotalAfterPeriod / variableIncomeAmount, 1 / timeInYears) - 1
       : 0,
   };
+  
+  // Calcular retornos mensais equivalentes
+  const monthlyReturn = {
+    fixedIncome: annualToMonthlyRate(annualizedReturn.fixedIncome),
+    variableIncome: annualToMonthlyRate(annualizedReturn.variableIncome),
+    inflationAdjusted: hasFixedIncomeCalculated && timeInYears > 0
+      ? annualToMonthlyRate(Math.pow(inflationAdjustedAmount / fixedIncomeContributions, 1 / timeInYears) - 1)
+      : 0
+  };
 
   return (
     <div className="space-y-6">
@@ -152,7 +161,7 @@ const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
                     <TableHead>Tipo</TableHead>
                     <TableHead>Valor Inicial</TableHead>
                     <TableHead>Valor Final</TableHead>
-                    <TableHead>Retorno Anual</TableHead>
+                    <TableHead className="text-center">Retorno</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -161,8 +170,17 @@ const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
                       <TableCell className="font-medium">Renda Fixa</TableCell>
                       <TableCell>{formatCurrency(fixedIncomeInitialValue)}</TableCell>
                       <TableCell>{formatCurrency(fixedIncomeTotalAmount)}</TableCell>
-                      <TableCell className="text-green-600">
-                        {(annualizedReturn.fixedIncome * 100).toFixed(2)}%
+                      <TableCell>
+                        <div className="flex justify-between items-center">
+                          <div className="text-green-600">
+                            <div className="text-xs text-gray-500">Anual</div>
+                            {(annualizedReturn.fixedIncome * 100).toFixed(2)}%
+                          </div>
+                          <div className="text-green-600">
+                            <div className="text-xs text-gray-500">Mensal</div>
+                            {(monthlyReturn.fixedIncome * 100).toFixed(2)}%
+                          </div>
+                        </div>
                       </TableCell>
                     </TableRow>
                   )}
@@ -171,8 +189,17 @@ const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
                       <TableCell className="font-medium">Renda Variável</TableCell>
                       <TableCell>{formatCurrency(variableIncomeAmount)}</TableCell>
                       <TableCell>{formatCurrency(variableIncomeTotalAfterPeriod)}</TableCell>
-                      <TableCell className="text-green-600">
-                        {(annualizedReturn.variableIncome * 100).toFixed(2)}%
+                      <TableCell>
+                        <div className="flex justify-between items-center">
+                          <div className="text-green-600">
+                            <div className="text-xs text-gray-500">Anual</div>
+                            {(annualizedReturn.variableIncome * 100).toFixed(2)}%
+                          </div>
+                          <div className="text-green-600">
+                            <div className="text-xs text-gray-500">Mensal</div>
+                            {(monthlyReturn.variableIncome * 100).toFixed(2)}%
+                          </div>
+                        </div>
                       </TableCell>
                     </TableRow>
                   )}
@@ -181,8 +208,17 @@ const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
                       <TableCell className="font-medium">Renda Fixa (ajustada pela inflação)</TableCell>
                       <TableCell>{formatCurrency(fixedIncomeInitialValue)}</TableCell>
                       <TableCell>{formatCurrency(inflationAdjustedAmount)}</TableCell>
-                      <TableCell className="text-amber-600">
-                        {((Math.pow(inflationAdjustedAmount / fixedIncomeContributions, 1 / timeInYears) - 1) * 100).toFixed(2)}%
+                      <TableCell>
+                        <div className="flex justify-between items-center">
+                          <div className="text-amber-600">
+                            <div className="text-xs text-gray-500">Anual</div>
+                            {((Math.pow(inflationAdjustedAmount / fixedIncomeContributions, 1 / timeInYears) - 1) * 100).toFixed(2)}%
+                          </div>
+                          <div className="text-amber-600">
+                            <div className="text-xs text-gray-500">Mensal</div>
+                            {(monthlyReturn.inflationAdjusted * 100).toFixed(2)}%
+                          </div>
+                        </div>
                       </TableCell>
                     </TableRow>
                   )}
@@ -193,6 +229,11 @@ const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
                 <div className="mt-4 p-3 bg-purple-50 rounded-lg">
                   <div className="text-sm text-purple-600">Total de dividendos acumulados</div>
                   <div className="text-xl font-bold text-purple-700">{formatCurrency(variableTotalDividends)}</div>
+                  {hasFixedIncomeCalculated && hasVariableIncomeCalculated && (
+                    <div className="text-sm text-purple-600 mt-2">
+                      Rendimento mensal médio de dividendos: {formatCurrency(variableTotalDividends / (timeInYears * 12))}
+                    </div>
+                  )}
                 </div>
               )}
             </div>

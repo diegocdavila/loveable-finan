@@ -1,4 +1,3 @@
-
 /**
  * Calcula o montante final utilizando juros compostos
  * @param initialValue Valor inicial investido
@@ -130,6 +129,16 @@ export const calculateDividendInvestment = (
 };
 
 /**
+ * Converte uma taxa anual para mensal equivalente
+ * @param annualRate Taxa anual em decimal (ex: 0.08 para 8%)
+ * @returns Taxa mensal equivalente em decimal
+ */
+export const annualToMonthlyRate = (annualRate: number): number => {
+  // Fórmula para converter taxa anual para mensal: (1 + i)^(1/12) - 1
+  return Math.pow(1 + annualRate, 1/12) - 1;
+};
+
+/**
  * Formata um valor monetário para exibição
  * @param value Valor a ser formatado
  * @param currency Moeda (padrão: BRL)
@@ -142,4 +151,13 @@ export const formatCurrency = (value: number, currency: string = 'BRL'): string 
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(value);
+};
+
+/**
+ * Formata um valor percentual para exibição
+ * @param value Valor decimal (ex: 0.05 para 5%)
+ * @returns String formatada como percentual
+ */
+export const formatPercentage = (value: number): string => {
+  return `${(value * 100).toFixed(2)}%`;
 };
