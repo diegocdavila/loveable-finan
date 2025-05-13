@@ -71,6 +71,65 @@ export const calculateMonthlyGrowth = (
 };
 
 /**
+ * Calcula o rendimento de dividendos ao longo dos anos
+ * @param investmentAmount Valor inicial investido
+ * @param dividendYield Taxa de dividendos anual (em porcentagem)
+ * @param expectedGrowth Taxa de crescimento esperado anual (em porcentagem)
+ * @param timeInYears Tempo em anos
+ * @param reinvestDividends Flag indicando se os dividendos são reinvestidos
+ * @returns Objeto com resultados do investimento em dividendos
+ */
+export const calculateDividendInvestment = (
+  investmentAmount: number,
+  dividendYield: number,
+  expectedGrowth: number,
+  timeInYears: number,
+  reinvestDividends: boolean
+): {
+  totalAfterPeriod: number,
+  totalDividends: number,
+  yearlyData: {
+    year: number;
+    investmentValue: number;
+    dividendAmount: number;
+    accumulatedDividends: number;
+  }[]
+} => {
+  let currentInvestmentValue = investmentAmount;
+  let totalDividends = 0;
+  let yearlyDividends = 0;
+  const yearlyData = [];
+
+  for (let year = 1; year <= timeInYears; year++) {
+    // Calcula dividendos do ano atual
+    yearlyDividends = currentInvestmentValue * (dividendYield / 100);
+    totalDividends += yearlyDividends;
+    
+    // Adiciona dados do ano atual
+    yearlyData.push({
+      year,
+      investmentValue: parseFloat(currentInvestmentValue.toFixed(2)),
+      dividendAmount: parseFloat(yearlyDividends.toFixed(2)),
+      accumulatedDividends: parseFloat(totalDividends.toFixed(2))
+    });
+    
+    // Aplica crescimento esperado ao valor do investimento
+    currentInvestmentValue = currentInvestmentValue * (1 + expectedGrowth / 100);
+    
+    // Se optar por reinvestir dividendos, adiciona ao valor atual do investimento
+    if (reinvestDividends) {
+      currentInvestmentValue += yearlyDividends;
+    }
+  }
+  
+  return {
+    totalAfterPeriod: parseFloat(currentInvestmentValue.toFixed(2)),
+    totalDividends: parseFloat(totalDividends.toFixed(2)),
+    yearlyData
+  };
+};
+
+/**
  * Formata um valor monetário para exibição
  * @param value Valor a ser formatado
  * @param currency Moeda (padrão: BRL)
