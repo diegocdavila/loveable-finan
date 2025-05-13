@@ -5,6 +5,7 @@ import CalculatorResults from './CalculatorResults';
 import InvestmentChart from './InvestmentChart';
 import VariableIncomeForm from './VariableIncomeForm';
 import VariableIncomeResults from './VariableIncomeResults';
+import PortfolioOverview from './PortfolioOverview';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   calculateCompoundInterest, 
@@ -146,9 +147,10 @@ const Calculator: React.FC = () => {
   return (
     <div className="w-full max-w-7xl mx-auto">
       <Tabs defaultValue="fixed-income" className="w-full">
-        <TabsList className="grid grid-cols-2 mb-6">
+        <TabsList className="grid grid-cols-3 mb-6">
           <TabsTrigger value="fixed-income">Renda Fixa</TabsTrigger>
           <TabsTrigger value="variable-income">Renda Variável</TabsTrigger>
+          <TabsTrigger value="portfolio">Consolidado</TabsTrigger>
         </TabsList>
         
         <TabsContent value="fixed-income">
@@ -215,6 +217,22 @@ const Calculator: React.FC = () => {
               />
             </div>
           </div>
+        </TabsContent>
+        
+        <TabsContent value="portfolio">
+          <PortfolioOverview
+            fixedIncomeInitialValue={initialValue}
+            fixedIncomeTotalAmount={totalAmount}
+            fixedIncomeInterest={totalInterest}
+            fixedIncomeContributions={totalContributions}
+            inflationAdjustedAmount={inflationAdjustedAmount}
+            timeInYears={timeInYears}
+            variableIncomeAmount={investmentAmount}
+            variableIncomeTotalAfterPeriod={variableIncomeResults.totalAfterPeriod}
+            variableTotalDividends={variableIncomeResults.totalDividends}
+            hasFixedIncomeCalculated={hasCalculated}
+            hasVariableIncomeCalculated={hasCalculatedVariableIncome}
+          />
         </TabsContent>
       </Tabs>
     </div>
