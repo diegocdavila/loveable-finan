@@ -10,6 +10,7 @@ interface InvestmentChartProps {
     amount: number;
     interest: number;
     contribution: number;
+    inflationAdjusted: number;
   }[];
   hasCalculated: boolean;
 }
@@ -99,6 +100,15 @@ const InvestmentChart: React.FC<InvestmentChartProps> = ({ data, hasCalculated }
                 stroke="#38A169" 
                 fill="#38A169" 
                 fillOpacity={0.5}
+              />
+              <Area 
+                type="monotone" 
+                dataKey="inflationAdjusted" 
+                name="Valor Ajustado pela Inflação" 
+                stroke="#D97706" 
+                fill="none"
+                strokeDasharray="5 5"
+                strokeWidth={2}
               />
             </AreaChart>
           </ResponsiveContainer>

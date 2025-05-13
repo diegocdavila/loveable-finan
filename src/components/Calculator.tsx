@@ -11,19 +11,21 @@ const Calculator: React.FC = () => {
   const [initialValue, setInitialValue] = useState<number>(1000);
   const [monthlyContribution, setMonthlyContribution] = useState<number>(100);
   const [interestRate, setInterestRate] = useState<number>(8);
+  const [inflationRate, setInflationRate] = useState<number>(4);
   const [timeInYears, setTimeInYears] = useState<number>(10);
   
   // Estados para os resultados
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [totalContributions, setTotalContributions] = useState<number>(0);
   const [totalInterest, setTotalInterest] = useState<number>(0);
+  const [inflationAdjustedAmount, setInflationAdjustedAmount] = useState<number>(0);
   const [monthlyData, setMonthlyData] = useState<any[]>([]);
   const [hasCalculated, setHasCalculated] = useState<boolean>(false);
   
   const handleCalculate = () => {
     try {
       // Validar entradas
-      if (initialValue < 0 || monthlyContribution < 0 || interestRate < 0 || timeInYears <= 0) {
+      if (initialValue < 0 || monthlyContribution < 0 || interestRate < 0 || inflationRate < 0 || timeInYears <= 0) {
         toast({
           title: "Valores inválidos",
           description: "Por favor, preencha todos os campos com valores válidos.",
@@ -40,21 +42,26 @@ const Calculator: React.FC = () => {
         timeInYears
       );
       
-      // Calcular valores mensais para o gráfico
+      // Calcular valores mensais para o gráfico, incluindo ajuste da inflação
       const monthlyValues = calculateMonthlyGrowth(
         initialValue,
         monthlyContribution,
         interestRate,
-        timeInYears
+        timeInYears,
+        inflationRate
       );
       
       // Calcular total de contribuições
       const totalContrib = initialValue + (monthlyContribution * timeInYears * 12);
       
+      // Calcular o valor ajustado pela inflação
+      const inflationAdjusted = finalAmount / Math.pow(1 + inflationRate / 100, timeInYears);
+      
       // Atualizar estados
       setTotalAmount(finalAmount);
       setTotalContributions(totalContrib);
       setTotalInterest(finalAmount - totalContrib);
+      setInflationAdjustedAmount(inflationAdjusted);
       setMonthlyData(monthlyValues);
       setHasCalculated(true);
       
@@ -80,10 +87,12 @@ const Calculator: React.FC = () => {
             initialValue={initialValue}
             monthlyContribution={monthlyContribution}
             interestRate={interestRate}
+            inflationRate={inflationRate}
             timeInYears={timeInYears}
             onInitialValueChange={setInitialValue}
             onMonthlyContributionChange={setMonthlyContribution}
             onInterestRateChange={setInterestRate}
+            onInflationRateChange={setInflationRate}
             onTimeInYearsChange={setTimeInYears}
             onCalculate={handleCalculate}
           />
@@ -95,6 +104,8 @@ const Calculator: React.FC = () => {
             totalAmount={totalAmount}
             totalContributions={totalContributions}
             totalInterest={totalInterest}
+            inflationAdjustedAmount={inflationAdjustedAmount}
+            inflationRate={inflationRate}
             monthlyData={monthlyData}
             hasCalculated={hasCalculated}
           />

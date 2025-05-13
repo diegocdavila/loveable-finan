@@ -8,11 +8,14 @@ interface CalculatorResultsProps {
   totalAmount: number;
   totalContributions: number;
   totalInterest: number;
+  inflationAdjustedAmount: number;
+  inflationRate: number;
   monthlyData: {
     month: number;
     amount: number;
     interest: number;
     contribution: number;
+    inflationAdjusted?: number;
   }[];
   hasCalculated: boolean;
 }
@@ -22,6 +25,8 @@ const CalculatorResults: React.FC<CalculatorResultsProps> = ({
   totalAmount,
   totalContributions,
   totalInterest,
+  inflationAdjustedAmount,
+  inflationRate,
   hasCalculated
 }) => {
   if (!hasCalculated) {
@@ -31,6 +36,10 @@ const CalculatorResults: React.FC<CalculatorResultsProps> = ({
       </div>
     );
   }
+
+  // Calcular perda com inflação
+  const inflationLoss = totalAmount - inflationAdjustedAmount;
+  const inflationImpactPercentage = (inflationLoss / totalAmount) * 100;
 
   return (
     <div className="space-y-6">
@@ -65,6 +74,28 @@ const CalculatorResults: React.FC<CalculatorResultsProps> = ({
             <div className="text-sm text-finance-neutral">Rendimento</div>
             <div className="text-xl font-bold text-finance-positive">
               +{((totalAmount / totalContributions - 1) * 100).toFixed(2)}%
+            </div>
+          </div>
+
+          <div className="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200">
+            <h3 className="text-lg font-semibold text-amber-800">Impacto da Inflação</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+              <div>
+                <div className="text-sm text-amber-700">Taxa de inflação anual</div>
+                <div className="text-xl font-bold text-amber-800">{inflationRate.toFixed(2)}%</div>
+              </div>
+              <div>
+                <div className="text-sm text-amber-700">Valor ajustado pela inflação</div>
+                <div className="text-xl font-bold text-amber-800">{formatCurrency(inflationAdjustedAmount)}</div>
+              </div>
+              <div>
+                <div className="text-sm text-amber-700">Perda de poder aquisitivo</div>
+                <div className="text-xl font-bold text-amber-800">{formatCurrency(inflationLoss)}</div>
+              </div>
+              <div>
+                <div className="text-sm text-amber-700">Impacto percentual</div>
+                <div className="text-xl font-bold text-amber-800">-{inflationImpactPercentage.toFixed(2)}%</div>
+              </div>
             </div>
           </div>
         </CardContent>

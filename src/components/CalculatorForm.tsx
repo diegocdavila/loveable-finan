@@ -10,10 +10,12 @@ export interface CalculatorFormProps {
   initialValue: number;
   monthlyContribution: number;
   interestRate: number;
+  inflationRate: number;
   timeInYears: number;
   onInitialValueChange: (value: number) => void;
   onMonthlyContributionChange: (value: number) => void;
   onInterestRateChange: (value: number) => void;
+  onInflationRateChange: (value: number) => void;
   onTimeInYearsChange: (value: number) => void;
   onCalculate: () => void;
 }
@@ -22,10 +24,12 @@ const CalculatorForm: React.FC<CalculatorFormProps> = ({
   initialValue,
   monthlyContribution,
   interestRate,
+  inflationRate,
   timeInYears,
   onInitialValueChange,
   onMonthlyContributionChange,
   onInterestRateChange,
+  onInflationRateChange,
   onTimeInYearsChange,
   onCalculate
 }) => {
@@ -75,6 +79,21 @@ const CalculatorForm: React.FC<CalculatorFormProps> = ({
             step={0.1}
             value={[interestRate]}
             onValueChange={(value) => onInterestRateChange(value[0])}
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <div className="flex justify-between">
+            <Label htmlFor="inflationRate">Taxa de inflação anual (%)</Label>
+            <span className="text-sm font-medium">{inflationRate.toFixed(2)}%</span>
+          </div>
+          <Slider
+            id="inflationRate"
+            min={0}
+            max={15}
+            step={0.1}
+            value={[inflationRate]}
+            onValueChange={(value) => onInflationRateChange(value[0])}
           />
         </div>
         

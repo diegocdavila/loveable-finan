@@ -31,15 +31,18 @@ export const calculateCompoundInterest = (
  * @param monthlyContribution Contribuição mensal
  * @param interestRate Taxa de juros anual (em porcentagem)
  * @param timeInYears Tempo em anos
+ * @param inflationRate Taxa de inflação anual (em porcentagem)
  * @returns Array com os montantes mês a mês
  */
 export const calculateMonthlyGrowth = (
   initialValue: number,
   monthlyContribution: number,
   interestRate: number,
-  timeInYears: number
-): { month: number; amount: number; interest: number; contribution: number }[] => {
+  timeInYears: number,
+  inflationRate: number = 0
+): { month: number; amount: number; interest: number; contribution: number; inflationAdjusted: number }[] => {
   const monthlyRate = interestRate / 100 / 12;
+  const monthlyInflationRate = inflationRate / 100 / 12;
   const totalMonths = timeInYears * 12;
   
   let currentAmount = initialValue;
@@ -51,11 +54,16 @@ export const calculateMonthlyGrowth = (
     currentAmount = currentAmount + interestEarned + monthlyContribution;
     totalContribution += monthlyContribution;
     
+    // Calculando o valor ajustado pela inflação
+    const inflationFactor = Math.pow(1 + monthlyInflationRate, i + 1);
+    const inflationAdjusted = currentAmount / inflationFactor;
+    
     result.push({
       month: i + 1,
       amount: parseFloat(currentAmount.toFixed(2)),
       interest: parseFloat((currentAmount - totalContribution).toFixed(2)),
-      contribution: parseFloat(totalContribution.toFixed(2))
+      contribution: parseFloat(totalContribution.toFixed(2)),
+      inflationAdjusted: parseFloat(inflationAdjusted.toFixed(2))
     });
   }
   
