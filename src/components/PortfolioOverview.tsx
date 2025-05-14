@@ -87,12 +87,20 @@ const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
     timeInYears
   );
 
-  // Calcular rendimento anual total e média mensal
-  const totalAnnualIncome = 
-    (hasFixedIncomeCalculated ? fixedIncomeTotalAmount - fixedIncomeInitialValue - (fixedIncomeContributions * timeInYears * 12) : 0) + 
-    (hasVariableIncomeCalculated ? variableTotalDividends : 0);
+  // Calcular rendimento anual total e média mensal (corrigido)
+  // Ganhos da renda fixa (valor final - valor inicial - contribuições totais)
+  const fixedIncomeGains = hasFixedIncomeCalculated ? 
+    fixedIncomeTotalAmount - fixedIncomeInitialValue - (fixedIncomeContributions * timeInYears * 12) : 0;
   
-  const monthlyAverageIncome = totalAnnualIncome / (timeInYears * 12);
+  // Ganhos da renda variável (dividendos + ganhos de capital)
+  const variableIncomeGains = hasVariableIncomeCalculated ? 
+    variableTotalDividends + (variableIncomeTotalAfterPeriod - variableIncomeAmount) : 0;
+  
+  // Total de ganhos anuais
+  const totalAnnualIncome = fixedIncomeGains + variableIncomeGains;
+  
+  // Média mensal (total de ganhos dividido pelo número de meses)
+  const monthlyAverageIncome = timeInYears > 0 ? totalAnnualIncome / (timeInYears * 12) : 0;
 
   return (
     <div className="space-y-6">
