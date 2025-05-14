@@ -7,13 +7,17 @@ interface PortfolioSummaryProps {
   finalValue: number;
   totalGains: number;
   gainPercentage: number;
+  annualizedReturn?: number;
+  monthlyAverage?: number;
 }
 
 const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({
   initialInvestment,
   finalValue,
   totalGains,
-  gainPercentage
+  gainPercentage,
+  annualizedReturn,
+  monthlyAverage
 }) => {
   return (
     <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -36,6 +40,21 @@ const PortfolioSummary: React.FC<PortfolioSummaryProps> = ({
         <div className="text-sm text-green-600">Retorno percentual</div>
         <div className="text-2xl font-bold text-green-700">+{gainPercentage.toFixed(2)}%</div>
       </div>
+
+      {(annualizedReturn !== undefined && monthlyAverage !== undefined) && (
+        <div className="col-span-2 p-4 bg-blue-50 rounded-lg">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <div className="text-sm text-blue-600">Rendimento anual total</div>
+              <div className="text-2xl font-bold text-blue-700">{formatCurrency(annualizedReturn)}</div>
+            </div>
+            <div>
+              <div className="text-sm text-blue-600">Média de rendimento mensal</div>
+              <div className="text-2xl font-bold text-blue-700">{formatCurrency(monthlyAverage)}</div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

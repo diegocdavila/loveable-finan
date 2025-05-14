@@ -87,6 +87,13 @@ const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
     timeInYears
   );
 
+  // Calcular rendimento anual total e média mensal
+  const totalAnnualIncome = 
+    (hasFixedIncomeCalculated ? fixedIncomeTotalAmount - fixedIncomeInitialValue - (fixedIncomeContributions * timeInYears * 12) : 0) + 
+    (hasVariableIncomeCalculated ? variableTotalDividends : 0);
+  
+  const monthlyAverageIncome = totalAnnualIncome / (timeInYears * 12);
+
   return (
     <div className="space-y-6">
       <Card className="border-gray-300">
@@ -99,6 +106,8 @@ const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
             finalValue={finalValue}
             totalGains={totalGains}
             gainPercentage={gainPercentage}
+            annualizedReturn={totalAnnualIncome}
+            monthlyAverage={monthlyAverageIncome}
           />
           
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
