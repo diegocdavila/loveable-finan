@@ -117,10 +117,10 @@ const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
               <div className="text-2xl font-bold text-green-700">+{gainPercentage.toFixed(2)}%</div>
             </div>
             
-            {/* Novo campo para média mensal */}
-            <div className="p-4 bg-blue-50 rounded-lg">
-              <div className="text-sm text-blue-600">Ganhos médios mensais</div>
-              <div className="text-2xl font-bold text-blue-700">{formatCurrency(monthlyAverageGains)}</div>
+            {/* Campo para média mensal com estilo atualizado */}
+            <div className="p-4 bg-blue-100 rounded-lg">
+              <div className="text-sm text-blue-800">Ganhos médios mensais</div>
+              <div className="text-2xl font-bold text-blue-900">{formatCurrency(monthlyAverageGains)}</div>
             </div>
           </div>
           
