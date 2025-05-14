@@ -61,6 +61,9 @@ const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
   const totalGains = finalValue - initialInvestment;
   const gainPercentage = initialInvestment > 0 ? (totalGains / initialInvestment) * 100 : 0;
   
+  // Calcular ganhos médios mensais
+  const monthlyAverageGains = totalGains / (timeInYears * 12);
+  
   // Preparar dados para o gráfico de distribuição do portfólio final
   const portfolioDistribution = [
     {
@@ -112,6 +115,12 @@ const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
             <div className="p-4 bg-green-50 rounded-lg">
               <div className="text-sm text-green-600">Retorno percentual</div>
               <div className="text-2xl font-bold text-green-700">+{gainPercentage.toFixed(2)}%</div>
+            </div>
+            
+            {/* Novo campo para média mensal */}
+            <div className="p-4 bg-blue-50 rounded-lg">
+              <div className="text-sm text-blue-600">Ganhos médios mensais</div>
+              <div className="text-2xl font-bold text-blue-700">{formatCurrency(monthlyAverageGains)}</div>
             </div>
           </div>
           
