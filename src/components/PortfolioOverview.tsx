@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { formatCurrency } from '@/utils/calculations';
+import PortfolioPDF from './PortfolioPDF';
 import {
   PieChart,
   Pie,
@@ -206,6 +207,23 @@ const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
               )}
             </div>
           </div>
+
+          {/* Botão para gerar PDF */}
+          <PortfolioPDF 
+            fixedIncomeInitialValue={fixedIncomeInitialValue}
+            fixedIncomeTotalAmount={fixedIncomeTotalAmount}
+            fixedIncomeInterest={fixedIncomeInterest}
+            timeInYears={timeInYears}
+            inflationAdjustedAmount={inflationAdjustedAmount}
+            variableIncomeAmount={variableIncomeAmount}
+            variableIncomeTotalAfterPeriod={variableIncomeTotalAfterPeriod}
+            variableTotalDividends={variableTotalDividends}
+            initialInvestment={initialInvestment}
+            finalValue={finalValue}
+            totalGains={totalGains}
+            gainPercentage={gainPercentage}
+            monthlyAverageGains={monthlyAverageGains}
+          />
         </CardContent>
       </Card>
     </div>
