@@ -65,6 +65,9 @@ const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
   // Calcular ganhos médios mensais
   const monthlyAverageGains = totalGains / (timeInYears * 12);
   
+  // Calcular percentual mensal
+  const monthlyGainPercentage = Math.pow((1 + gainPercentage / 100), 1/12) - 1;
+  
   // Preparar dados para o gráfico de distribuição do portfólio final
   const portfolioDistribution = [
     {
@@ -97,7 +100,7 @@ const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
           <CardTitle className="text-gray-800">Visão Consolidada da Carteira</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="mt-2 grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="p-4 bg-gray-50 rounded-lg">
               <div className="text-sm text-gray-600">Investimento inicial total</div>
               <div className="text-2xl font-bold text-gray-800">{formatCurrency(initialInvestment)}</div>
@@ -114,15 +117,26 @@ const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
             </div>
             
             <div className="p-4 bg-green-50 rounded-lg">
-              <div className="text-sm text-green-600">Retorno percentual</div>
+              <div className="text-sm text-green-600">Retorno percentual total</div>
               <div className="text-2xl font-bold text-green-700">+{gainPercentage.toFixed(2)}%</div>
             </div>
             
-            {/* Campo para média mensal com estilo atualizado */}
+            <div className="p-4 bg-purple-50 rounded-lg">
+              <div className="text-sm text-purple-600">Retorno percentual mensal</div>
+              <div className="text-2xl font-bold text-purple-700">+{(monthlyGainPercentage * 100).toFixed(2)}%</div>
+            </div>
+            
             <div className="p-4 bg-blue-100 rounded-lg">
               <div className="text-sm text-blue-800">Ganhos médios mensais</div>
               <div className="text-2xl font-bold text-blue-900">{formatCurrency(monthlyAverageGains)}</div>
             </div>
+            
+            {hasVariableIncomeCalculated && (
+              <div className="p-4 bg-purple-50 rounded-lg">
+                <div className="text-sm text-purple-600">Total de dividendos acumulados</div>
+                <div className="text-xl font-bold text-purple-700">{formatCurrency(variableTotalDividends)}</div>
+              </div>
+            )}
           </div>
           
           {/* Distribuição do portfólio em gráfico de pizza */}
@@ -198,13 +212,6 @@ const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
                   )}
                 </TableBody>
               </Table>
-
-              {hasVariableIncomeCalculated && (
-                <div className="mt-4 p-3 bg-purple-50 rounded-lg">
-                  <div className="text-sm text-purple-600">Total de dividendos acumulados</div>
-                  <div className="text-xl font-bold text-purple-700">{formatCurrency(variableTotalDividends)}</div>
-                </div>
-              )}
             </div>
           </div>
 

@@ -39,6 +39,9 @@ const PortfolioPDF: React.FC<PortfolioPDFProps> = ({
   gainPercentage,
   monthlyAverageGains,
 }) => {
+  // Calcular percentual mensal
+  const monthlyGainPercentage = Math.pow((1 + gainPercentage / 100), 1/12) - 1;
+  
   const handlePrintPDF = () => {
     // Criar um estilo específico para impressão
     const printStyles = `
@@ -79,13 +82,22 @@ const PortfolioPDF: React.FC<PortfolioPDFProps> = ({
             <div class="print-summary-value positive">${formatCurrency(totalGains)}</div>
           </div>
           <div class="print-summary-item">
-            <div class="print-summary-title">Retorno Percentual</div>
+            <div class="print-summary-title">Retorno Percentual Total</div>
             <div class="print-summary-value positive">+${gainPercentage.toFixed(2)}%</div>
+          </div>
+          <div class="print-summary-item">
+            <div class="print-summary-title">Retorno Percentual Mensal</div>
+            <div class="print-summary-value positive">+${(monthlyGainPercentage * 100).toFixed(2)}%</div>
           </div>
           <div class="print-summary-item">
             <div class="print-summary-title">Ganhos Médios Mensais</div>
             <div class="print-summary-value">${formatCurrency(monthlyAverageGains)}</div>
           </div>
+          ${variableTotalDividends > 0 ? 
+          `<div class="print-summary-item">
+            <div class="print-summary-title">Total de Dividendos Acumulados</div>
+            <div class="print-summary-value positive">${formatCurrency(variableTotalDividends)}</div>
+          </div>` : ''}
         </div>
         
         <div class="print-subheader">Detalhes por Tipo de Investimento</div>
@@ -125,15 +137,6 @@ const PortfolioPDF: React.FC<PortfolioPDFProps> = ({
               </tr>` : ''}
           </tbody>
         </table>
-        
-        ${variableTotalDividends > 0 ? 
-          `<div class="print-subheader">Dividendos</div>
-          <div class="print-summary">
-            <div class="print-summary-item">
-              <div class="print-summary-title">Total de Dividendos Acumulados</div>
-              <div class="print-summary-value positive">${formatCurrency(variableTotalDividends)}</div>
-            </div>
-          </div>` : ''}
         
         <div class="print-footer">
           <p>Relatório gerado em ${new Date().toLocaleDateString()} - Calculadora de Investimentos</p>
